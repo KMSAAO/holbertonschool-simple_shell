@@ -1,0 +1,77 @@
+.TH simple_shell 1 "November 2025" "Holberton School" "User Commands"
+.SH NAME
+simple_shell \- simple UNIX command interpreter
+.SH SYNOPSIS
+.B hsh
+.RI [ no\ arguments ]
+.SH DESCRIPTION
+The
+.B hsh
+program is a simple UNIX command interpreter that reads commands from standard input and executes them.
+It aims to reproduce the basic behavior of
+.BR /bin/sh
+for the purpose of learning process creation, parsing and environment handling.
+
+The shell works in two modes:
+.IP \(bu 2
+Interactive mode: displays a prompt and waits for the user to type a command.
+.IP \(bu 2
+Non\-interactive mode: reads commands from a pipe or a file until EOF.
+
+For each command, the shell:
+.IP 1. 3
+Reads a line of input.
+.IP 2. 3
+Tokenizes the line into a command and its arguments.
+.IP 3. 3
+Searches the command in the directories listed in the PATH environment variable.
+.IP 4. 3
+Creates a child process and executes the command using
+.BR execve (2).
+.IP 5. 3
+Waits for the child process to finish.
+
+.SH BUILTINS
+The following builtins may be implemented:
+.TP
+.B exit
+Exit the shell.
+.TP
+.B env
+Print the current environment.
+
+.SH ENVIRONMENT
+The following environment variable is used:
+.TP
+.B PATH
+A colon-separated list of directories to search for executable files.
+
+.SH EXIT STATUS
+The shell returns the exit status of the last command executed, or 0 on success.
+
+.SH EXAMPLES
+Interactive mode:
+.PP
+.nf
+$ ./hsh
+($) /bin/ls
+file1  file2  hsh
+($) exit
+.fi
+.PP
+Non-interactive mode:
+.PP
+.nf
+$ echo "/bin/ls" | ./hsh
+file1  file2  hsh
+.fi
+
+.SH AUTHORS
+See the AUTHORS file in the project repository.
+
+.SH SEE ALSO
+.BR sh (1),
+.BR execve (2),
+.BR fork (2),
+.BR wait (2)
+
