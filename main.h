@@ -11,6 +11,6 @@
 extern char **environ;
 
 void shell_loop(char *progname);
-int execute_cmd(char *cmd, char *progname);
+int execute_cmd(char **args, char *progname);
 
 #endif /* MAIN_H */

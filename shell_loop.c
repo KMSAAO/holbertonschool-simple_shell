@@ -1,10 +1,12 @@
 #include "main.h"
 
+#define MAX_ARGS 64
+
 /**
- * strip_spaces - remove leading and trailing spaces in place
- * @s: string to strip
+ * strip_spaces - remove leading/trailing spaces
+ * @s: string
  *
- * Return: pointer to first non-space char (may be s itself)
+ * Return: pointer to first non-space
  */
 static char *strip_spaces(char *s)
 {
@@ -28,7 +30,7 @@ static char *strip_spaces(char *s)
 
 /**
  * shell_loop - main shell loop
- * @progname: program name to use in error messages
+ * @progname: program name used in error messages
  */
 void shell_loop(char *progname)
 {
@@ -36,6 +38,9 @@ void shell_loop(char *progname)
 	size_t len = 0;
 	ssize_t nread;
 	char *cmd;
+	char *token;
+	char *args[MAX_ARGS];
+	int i;
 
 	while (1)
 	{
@@ -63,7 +68,19 @@ void shell_loop(char *progname)
 			continue;
 		}
 
-		execute_cmd(cmd, progname);
+		/* tokenize into args[] */
+		i = 0;
+		token = strtok(cmd, " \t");
+		while (token && i < (MAX_ARGS - 1))
+		{
+			args[i++] = token;
+			token = strtok(NULL, " \t");
+		}
+		args[i] = NULL;
+
+		if (args[0] != NULL)
+			execute_cmd(args, progname);
+
 		free(line);
 	}
 }

@@ -3,20 +3,16 @@
 extern char **environ;
 
 /**
- * execute_cmd - fork and exec a single-word command
- * @cmd: command to run (must be full path, no args)
- * @progname: shell name to print in errors
+ * execute_cmd - fork and exec a command with optional args
+ * @args: NULL-terminated array of strings (argv)
+ * @progname: shell name for perror
  *
- * Return: 1 (continue shell loop)
+ * Return: 1 to continue loop
  */
-int execute_cmd(char *cmd, char *progname)
+int execute_cmd(char **args, char *progname)
 {
 	pid_t pid;
 	int status;
-	char *argv[2];
-
-	argv[0] = cmd;
-	argv[1] = NULL;
 
 	pid = fork();
 	if (pid == -1)
@@ -27,7 +23,7 @@ int execute_cmd(char *cmd, char *progname)
 
 	if (pid == 0)
 	{
-		if (execve(cmd, argv, environ) == -1)
+		if (execve(args[0], args, environ) == -1)
 		{
 			perror(progname);
 			exit(EXIT_FAILURE);
