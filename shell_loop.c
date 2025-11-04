@@ -2,10 +2,10 @@
 
 /**
  * shell_loop - main loop of the shell
- * @progname: name of the program (for error messages)
+ * @progname: name of the shell (for error messages)
  *
- * Description: displays a prompt (if interactive), reads one line,
- * executes it (only single-word commands), and repeats until EOF.
+ * Description: prompt -> getline -> exec -> repeat
+ * Only single-word commands, no PATH, handle EOF (Ctrl+D).
  */
 void shell_loop(char *progname)
 {
@@ -29,11 +29,11 @@ void shell_loop(char *progname)
 			break;
 		}
 
-		/* remove trailing newline */
+		/* strip newline */
 		if (nread > 0 && line[nread - 1] == '\n')
 			line[nread - 1] = '\0';
 
-		/* empty line -> show prompt again */
+		/* empty line -> prompt again */
 		if (line[0] == '\0')
 		{
 			free(line);
