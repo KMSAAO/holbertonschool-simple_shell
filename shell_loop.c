@@ -1,8 +1,11 @@
 #include "main.h"
 
 /**
- * shell_loop - main loop of the shell
- * @progname: name of the shell (for error messages)
+ * shell_loop - main shell loop
+ * @progname: program name to use in error messages
+ *
+ * Description: prompt -> getline -> execute -> repeat
+ * Single-word commands only, no PATH, handle EOF.
  */
 void shell_loop(char *progname)
 {
