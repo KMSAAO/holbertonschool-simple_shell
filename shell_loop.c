@@ -3,10 +3,10 @@
 #define MAX_ARGS 64
 
 /**
- * strip_spaces - remove leading/trailing spaces
- * @s: string
+ * strip_spaces - remove leading and trailing spaces/tabs
+ * @s: string to strip
  *
- * Return: pointer to first non-space
+ * Return: pointer to first non-space char
  */
 static char *strip_spaces(char *s)
 {
@@ -29,10 +29,12 @@ static char *strip_spaces(char *s)
 }
 
 /**
- * shell_loop - main shell loop
- * @progname: program name used in error messages
+ * shell_loop - main loop of the shell
+ * @progname: program name to show in errors
+ *
+ * Return: last command exit status
  */
-void shell_loop(char *progname)
+int shell_loop(char *progname)
 {
 	char *line = NULL;
 	size_t len = 0;
@@ -41,6 +43,8 @@ void shell_loop(char *progname)
 	char *token;
 	char *args[MAX_ARGS];
 	int i;
+	int status = 0;
+	int cmd_count = 0;
 
 	while (1)
 	{
@@ -68,7 +72,9 @@ void shell_loop(char *progname)
 			continue;
 		}
 
-		/* tokenize into args[] */
+		/* got a real command line */
+		cmd_count++;
+
 		i = 0;
 		token = strtok(cmd, " \t");
 		while (token && i < (MAX_ARGS - 1))
@@ -79,8 +85,10 @@ void shell_loop(char *progname)
 		args[i] = NULL;
 
 		if (args[0] != NULL)
-			execute_cmd(args, progname);
+			status = execute_cmd(args, progname, cmd_count);
 
 		free(line);
 	}
+
+	return (status);
 }

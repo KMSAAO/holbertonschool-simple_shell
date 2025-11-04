@@ -3,9 +3,9 @@
 extern char **environ;
 
 /**
- * get_path_value - get PATH value from env
+ * get_path_value - get PATH from environment
  *
- * Return: pointer to PATH string (not a copy), or NULL
+ * Return: pointer to PATH value or NULL
  */
 static char *get_path_value(void)
 {
@@ -21,10 +21,10 @@ static char *get_path_value(void)
 }
 
 /**
- * find_in_path - build "dir/cmd" and check if executable
+ * find_in_path - search for a command in PATH
  * @cmd: command name (no slash)
  *
- * Return: malloc'ed string with full path if found, else NULL
+ * Return: malloc'ed full path if found, or NULL
  */
 static char *find_in_path(char *cmd)
 {
@@ -70,36 +70,39 @@ static char *find_in_path(char *cmd)
 }
 
 /**
- * execute_cmd - resolve command (direct or via PATH) then exec
- * @args: argv-like array (args[0] = command)
- * @progname: shell name for error messages
+ * execute_cmd - resolve and execute a command
+ * @args: argument vector
+ * @progname: shell name (argv[0])
+ * @cmd_count: current command number (for error message)
  *
- * Return: 1 to continue shell loop
+ * Return: exit status of the command (127 if not found)
  */
-int execute_cmd(char **args, char *progname)
+int execute_cmd(char **args, char *progname, int cmd_count)
 {
 	pid_t pid;
 	int status;
 	char *cmd_path = NULL;
 
-	/* case 1: user typed a path (/bin/ls, ./a.out, etc.) */
+	/* if user typed a path */
 	if (strchr(args[0], '/'))
 	{
 		if (access(args[0], X_OK) != 0)
 		{
-			fprintf(stderr, "%s: not found\n", progname);
-			return (1);
+			fprintf(stderr, "%s: %d: %s: not found\n",
+				progname, cmd_count, args[0]);
+			return (127);
 		}
 		cmd_path = args[0];
 	}
 	else
 	{
-		/* case 2: search in PATH */
+		/* search in PATH */
 		cmd_path = find_in_path(args[0]);
 		if (!cmd_path)
 		{
-			fprintf(stderr, "%s: not found\n", progname);
-			return (1);
+			fprintf(stderr, "%s: %d: %s: not found\n",
+				progname, cmd_count, args[0]);
+			return (127);
 		}
 	}
 
@@ -127,7 +130,9 @@ int execute_cmd(char **args, char *progname)
 		waitpid(pid, &status, 0);
 		if (cmd_path != args[0])
 			free(cmd_path);
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
 	}
 
-	return (1);
+	return (0);
 }

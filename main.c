@@ -5,12 +5,11 @@
  * @argc: argument count
  * @argv: argument vector
  *
- * Return: 0
+ * Return: exit status of last command
  */
 int main(int argc, char **argv)
 {
 	(void)argc;
 
-	shell_loop(argv[0]);
-	return (0);
+	return (shell_loop(argv[0]));
 }
