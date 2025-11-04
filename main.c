@@ -1,11 +1,11 @@
 #include "main.h"
 
 /**
- * main - entry point for simple shell 0.1
+ * main - entry point
  * @argc: argument count
  * @argv: argument vector
  *
- * Return: 0 on success
+ * Return: 0
  */
 int main(int argc, char **argv)
 {

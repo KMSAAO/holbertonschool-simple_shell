@@ -3,9 +3,6 @@
 /**
  * shell_loop - main loop of the shell
  * @progname: name of the shell (for error messages)
- *
- * Description: prompt -> getline -> exec -> repeat
- * Only single-word commands, no PATH, handle EOF (Ctrl+D).
  */
 void shell_loop(char *progname)
 {
@@ -29,11 +26,9 @@ void shell_loop(char *progname)
 			break;
 		}
 
-		/* strip newline */
 		if (nread > 0 && line[nread - 1] == '\n')
 			line[nread - 1] = '\0';
 
-		/* empty line -> prompt again */
 		if (line[0] == '\0')
 		{
 			free(line);

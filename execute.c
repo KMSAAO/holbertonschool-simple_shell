@@ -123,3 +123,47 @@ int execute_cmd(char *cmd, char *progname)
 
 	return (1);
 }
+#include "main.h"
+
+extern char **environ;
+
+/**
+ * execute_cmd - forks and executes a command (exact path only)
+ * @cmd: command to execute (user input, single word)
+ * @progname: shell name to print in perror
+ *
+ * Return: 1 (we always continue the loop)
+ */
+int execute_cmd(char *cmd, char *progname)
+{
+	pid_t pid;
+	int status;
+	char *argv[2];
+
+	argv[0] = cmd;
+	argv[1] = NULL;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror(progname);
+		return (1);
+	}
+
+	if (pid == 0)
+	{
+		/* child: try to execute exactly what user typed */
+		if (execve(cmd, argv, environ) == -1)
+		{
+			perror(progname);
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+		/* parent: wait for the child */
+		waitpid(pid, &status, 0);
+	}
+
+	return (1);
+}
