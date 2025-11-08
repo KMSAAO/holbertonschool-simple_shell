@@ -1,4 +1,5 @@
 #include "main.h"
+#include <sys/wait.h>
 
 extern char **environ;
 
