@@ -8,7 +8,7 @@
  *
  * Return: pointer to first non-space char
  */
-static char *strip_spaces(char *s)
+char *strip_spaces(char *s)
 {
 	char *end;
 
@@ -27,10 +27,6 @@ static char *strip_spaces(char *s)
 
 	return (s);
 }
-
-#include "main.h"
-
-#define MAX_ARGS 64
 
 /**
  * read_and_parse_line - reads input and parses it into args
