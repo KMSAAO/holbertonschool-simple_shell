@@ -84,6 +84,12 @@ int shell_loop(char *progname)
 		}
 		args[i] = NULL;
 
+		if (args[0] && strcmp(args[0], "exit") == 0 && args[1] == NULL)
+		{
+			free(line);
+			break;
+		}
+
 		if (args[0] != NULL)
 			status = execute_cmd(args, progname, cmd_count);
 
